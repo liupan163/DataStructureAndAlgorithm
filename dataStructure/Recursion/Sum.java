@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package Recursion;
 
 public class Sum {
@@ -16,6 +17,24 @@ public class Sum {
 
     public static void main(String[] args) {
         int[] nums = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+=======
+package LinkedList;
+
+public class Sum{
+
+    public static int sum(int[] arr) {
+        return sum(arr ,0)
+    }
+    public static int sum(int[] arr,int l) {
+        if(l == arr.length){
+            return 0;
+        }else{
+            return arr[l] + sum(arr,l+1)
+        }
+    }
+    public static void main(String[] args){
+        int[] nums = {1,2,3,4,5,6,7,8};
+>>>>>>> a85a94ca3c227187e2b4fe2f9c77db10c58d8c63
         System.out.println(sum(nums));
     }
 }
