@@ -53,11 +53,11 @@ public class LinkedList<E> {
 
     public void add(int index, E e) {
         if (index < 0 || index > size) throw new IllegalArgumentException("Add fail,index is out of range");
-        if (index == 0) addFirst(e);
-        else {
-            Node prev = dummyHead;
-            for (int i = 0; i < index; i++)
-                prev = prev.next;
+//        if (index == 0) addFirst(e);
+//        else {
+        Node prev = dummyHead;
+        for (int i = 0; i < index; i++)
+            prev = prev.next;
 
 /*
             Node node = new Node(e);
@@ -65,9 +65,9 @@ public class LinkedList<E> {
             prev.next = node;
 */
 
-            prev.next = new Node(e, prev.next);
-            size++;
-        }
+        prev.next = new Node(e, prev.next);
+        size++;
+//        }
     }
 
     public void addLast(E e) {
