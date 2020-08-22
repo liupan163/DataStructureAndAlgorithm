@@ -1,5 +1,14 @@
 # DataStructureAndAlgorithm
 ## 常见的数据结构 和 算法笔记
+-   10 个数据结构：数组、链表、栈、队列、散列表、二叉树、堆、跳表、图、Trie 树；
+-   10 个算法： 递归、排序、二分查找、搜索、哈希算法、贪心算法、分治算法、回溯算法、动态规划、字符串匹配算法。
+
+红黑树、AVL树？
+
+tip:
+二叉搜索 能高效查询，但需要一块连续的内存，且增删效率低。
+跳表....：这种链表加多级索引的结构，就叫做跳表。
+
 
 ###数据结构
 -   1、数组、队列、栈
@@ -10,9 +19,14 @@
 十大经典排序算法
 https://www.cnblogs.com/onepixel/articles/7674659.html
 
+回溯算法
+-   递归 和 迭代
+-   经典问题
+    -   八皇后问题
+    -   迷宫问题
+
 KMP算法复杂，且效率相对不高，选用Boyer Moore（BM算法）
 Boyer Moore 字符串搜索算法之 JavaScript 实现
-//todo
 https://blog.yiguochen.com/boyer-moore.html
 如何理解动态规划？https://www.zhihu.com/question/39948290
 
