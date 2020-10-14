@@ -1,6 +1,7 @@
 package main
 
 import (
+	"math"
 	"sort"
 	"strings"
 )
@@ -8,8 +9,33 @@ import (
 func main() {
 	//println("result bool is ======>", isAnagram("anagram", "nagaram"))
 	//println("result string is ======>", removeDuplicates("bbaacaab"))
-	println("result string is ======>", groupAnagrams([]string{"eat", "tea", "tan", "ate", "nat", "bat"}))
+	//println("result string is ======>", groupAnagrams([]string{"eat", "tea", "tan", "ate", "nat", "bat"}))
+	println("myPow string is ======>", myPow(0.00001, 2147483647))
+}
 
+func myPow(x float64, n int) float64 {
+	if n == 0 {
+		return 1
+	} else if n == 1 {
+		return x
+	}
+	if n > 0 {
+		return iterate(x, n)
+	} else {
+		return 1 / iterate(x, int(math.Abs(float64(n))))
+	}
+}
+
+func iterate(x float64, n int) float64 {
+	if n == 1 {
+		return x
+	}
+	var tempValue = iterate(x, n/2)
+	if n%2 == 1 {
+		return tempValue * tempValue * x
+	} else {
+		return tempValue * tempValue
+	}
 }
 
 func groupAnagrams(strs []string) [][]string {
@@ -27,20 +53,20 @@ func groupAnagrams(strs []string) [][]string {
 	}
 	var resultList = make([][]string, 0)
 	for _, value := range resultMap {
-		if value==nil{
+		if value == nil {
 			println("resultMap value is nil===>")
 			continue
 		}
 		println(len(value))
-		var rowList = make([]string,0)
+		var rowList = make([]string, 0)
 		for _, wordValue := range value {
-			if wordValue==""{
+			if wordValue == "" {
 				continue
 			}
 			rowList = append(rowList, wordValue)
 			println("wordValue===>" + wordValue + " || rowList===>" + strings.Join(rowList, ""))
 		}
-		resultList = append(resultList,rowList)
+		resultList = append(resultList, rowList)
 	}
 	println(len(resultList))
 	return resultList
