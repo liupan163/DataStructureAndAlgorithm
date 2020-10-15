@@ -10,7 +10,62 @@ func main() {
 	//println("result bool is ======>", isAnagram("anagram", "nagaram"))
 	//println("result string is ======>", removeDuplicates("bbaacaab"))
 	//println("result string is ======>", groupAnagrams([]string{"eat", "tea", "tan", "ate", "nat", "bat"}))
-	println("myPow string is ======>", myPow(0.00001, 2147483647))
+	//println("myPow string is ======>", myPow(0.00001, 2147483647))
+	println("calculateMinimumHP string is ======>", calculateMinimumHP([][]int{{-2, -3, 3}, {-5, -10, 1}, {10, 30, -5}}))
+}
+
+var resultValue []int
+
+func calculateMinimumHP(dungeon [][]int) int {
+	var capacity = len(dungeon) * len(dungeon[0])
+	resultValue = make([]int, capacity)
+	var minInitialValue = 0
+	if 0 == len(dungeon) || 0 == len(dungeon[0]) {
+		minInitialValue = 1
+		return minInitialValue
+	}
+	x := 0
+	y := 0
+	doIterate(dungeon, minInitialValue, x, y)
+	sort.Ints(resultValue)
+	//for index, value := range resultValue {
+	//	println("index =>", index, "||value==>", value)
+	//}
+	//println("index =>", resultValue[0])
+	//println("minValue =>", 1-resultValue[0])
+	return resultValue[0]
+}
+
+func doIterate(dungeon [][]int, minInitialValue, x, y int) {
+	if x == len(dungeon[0])-1 && y == len(dungeon)-1 {
+		minInitialValue = minInitialValue + dungeon[x][y]
+		resultValue = append(resultValue, minInitialValue)
+		return
+	}
+	if x == len(dungeon[0])-1 {
+		var tempValue = 0
+		for index := y; index < len(dungeon); index++ {
+			tempValue = tempValue + dungeon[x][index]
+		}
+		minInitialValue = tempValue + minInitialValue
+		resultValue = append(resultValue, minInitialValue)
+		return
+	}
+	if y == len(dungeon)-1 {
+		var tempValue = 0
+		for index := x; index < len(dungeon[0]); index++ {
+			tempValue = tempValue + dungeon[index][y]
+		}
+		minInitialValue = tempValue + minInitialValue
+		resultValue = append(resultValue, minInitialValue)
+		return
+	}
+	if x != len(dungeon[0])-1 && y != len(dungeon)-1 {
+		var value = dungeon[x][y]
+		minInitialValue = minInitialValue + value
+		doIterate(dungeon, minInitialValue, x, y+1)
+		doIterate(dungeon, minInitialValue, x+1, y)
+	}
 }
 
 func myPow(x float64, n int) float64 {
