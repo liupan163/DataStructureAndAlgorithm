@@ -17,16 +17,17 @@ func main() {
 var resultValue []int
 
 func calculateMinimumHP(dungeon [][]int) int {
-	var capacity = len(dungeon) * len(dungeon[0])
-	resultValue = make([]int, capacity)
-	var minInitialValue = 0
+	//var capacity = len(dungeon) * len(dungeon[0])
+	resultValue = make([]int, 0)
+	var minInitialValue = 0.0
+	var accumulateValue = 0
 	if 0 == len(dungeon) || 0 == len(dungeon[0]) {
 		minInitialValue = 1
-		return minInitialValue
+		return int(minInitialValue)
 	}
 	x := 0
 	y := 0
-	doIterate(dungeon, minInitialValue, x, y)
+	doIterate(dungeon, minInitialValue, accumulateValue, x, y)
 	sort.Ints(resultValue)
 	//for index, value := range resultValue {
 	//	println("index =>", index, "||value==>", value)
@@ -36,37 +37,83 @@ func calculateMinimumHP(dungeon [][]int) int {
 	return resultValue[0]
 }
 
-func doIterate(dungeon [][]int, minInitialValue, x, y int) {
+func doIterate(dungeon [][]int, minInitialValue float64, accumulateValue, x, y int) {
 	if x == len(dungeon[0])-1 && y == len(dungeon)-1 {
-		minInitialValue = minInitialValue + dungeon[x][y]
-		resultValue = append(resultValue, minInitialValue)
+		accumulateValue = accumulateValue + dungeon[x][y]
+		if accumulateValue <= 0 {
+			minInitialValue = math.Max(minInitialValue, float64(1-accumulateValue))
+			if minInitialValue == float64(1-accumulateValue) {
+				resultValue = append(resultValue, int(minInitialValue))
+			}
+		}
 		return
 	}
 	if x == len(dungeon[0])-1 {
-		var tempValue = 0
 		for index := y; index < len(dungeon); index++ {
-			tempValue = tempValue + dungeon[x][index]
+			accumulateValue = accumulateValue + dungeon[x][index]
+			if accumulateValue <= 0 {
+				minInitialValue = math.Max(minInitialValue, float64(1-accumulateValue))
+				if minInitialValue == float64(1-accumulateValue) {
+					resultValue = append(resultValue, int(minInitialValue))
+				}
+			}
 		}
-		minInitialValue = tempValue + minInitialValue
-		resultValue = append(resultValue, minInitialValue)
 		return
 	}
 	if y == len(dungeon)-1 {
-		var tempValue = 0
 		for index := x; index < len(dungeon[0]); index++ {
-			tempValue = tempValue + dungeon[index][y]
+			accumulateValue = accumulateValue + dungeon[x][index]
+			if accumulateValue <= 0 {
+				minInitialValue = math.Max(minInitialValue, float64(1-accumulateValue))
+				if minInitialValue == float64(1-accumulateValue) {
+					resultValue = append(resultValue, int(minInitialValue))
+				}
+			}
 		}
-		minInitialValue = tempValue + minInitialValue
-		resultValue = append(resultValue, minInitialValue)
 		return
 	}
 	if x != len(dungeon[0])-1 && y != len(dungeon)-1 {
 		var value = dungeon[x][y]
-		minInitialValue = minInitialValue + value
-		doIterate(dungeon, minInitialValue, x, y+1)
-		doIterate(dungeon, minInitialValue, x+1, y)
+		accumulateValue = accumulateValue + value
+		if accumulateValue <= 0 {
+			minInitialValue = math.Max(minInitialValue, float64(1-accumulateValue))
+			if minInitialValue == float64(1-accumulateValue) {
+				resultValue = append(resultValue, int(minInitialValue))
+			}
+		}
+		doIterate(dungeon, minInitialValue, accumulateValue, x, y+1)
+		doIterate(dungeon, minInitialValue, accumulateValue, x+1, y)
 	}
 }
+
+type TreeNode struct {
+	     Val int
+	     Left *TreeNode
+	     Right *TreeNode
+	 }
+var minValue = 0
+func minDepth(root *TreeNode) int {
+	var tempMinValue = 0
+	calculateDepth(tempMinValue,root)
+	return minValue
+}
+
+func calculateDepth(tempMinValue int, node *TreeNode){
+	if node == nil{
+		return
+	}
+	tempMinValue = tempMinValue + 1
+	if(node.Left==nil && node.Right==nil){
+		//min
+		minValue = int(math.Min(float64(minValue),float64(tempMinValue)))
+		return
+	}else{
+		calculateDepth(tempMinValue,node.Left)
+		calculateDepth(tempMinValue,node.Right)
+	}
+}
+
+
 
 func myPow(x float64, n int) float64 {
 	if n == 0 {
