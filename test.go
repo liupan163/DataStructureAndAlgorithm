@@ -3,6 +3,7 @@ package main
 import (
 	"math"
 	"sort"
+	"strconv"
 	"strings"
 )
 
@@ -28,6 +29,44 @@ func main() {
 	c.Left = d
 	d.Left = e
 	println("calculateMinimumHP string is ======>", minDiffInBST(a))
+	ba := &TreeNode{Val: 1, Left: nil, Right: nil}
+	println("binaryTreePaths string is ======>", strings.Join(binaryTreePaths(ba),""))
+	println("binaryTreePaths string is ======>", len(binaryTreePaths(ba)))
+}
+
+var resultPaths = make([]string, 0)
+
+func binaryTreePaths(root *TreeNode) []string {
+	if root == nil {
+		return nil
+	}
+	var pathRecord = strconv.Itoa(root.Val)
+	if root.Left==nil && root.Right==nil{
+		resultPaths = append(resultPaths, pathRecord)
+	}
+	if root.Left != nil {
+		iterateTreePath(pathRecord, root.Left)
+	}
+	if root.Right != nil {
+		iterateTreePath(pathRecord, root.Right)
+	}
+	return resultPaths
+}
+func iterateTreePath(pathRecord string, node *TreeNode) {
+	if node == nil {
+		return
+	}
+	pathRecord = pathRecord + "->" + strconv.Itoa(node.Val)
+	if node.Left != nil {
+		iterateTreePath(pathRecord, node.Left)
+	}
+	if node.Right != nil {
+		iterateTreePath(pathRecord, node.Right)
+	}
+	if node.Left == nil && node.Right == nil {
+		resultPaths = append(resultPaths, pathRecord)
+		return
+	}
 }
 
 var resultValue []int
@@ -102,7 +141,8 @@ func doIterate(dungeon [][]int, minInitialValue float64, accumulateValue, x, y i
 	}
 }
 
-var minValue = 1<<32-1
+var minValue = 1<<32 - 1
+
 func minDiffInBST(root *TreeNode) int {
 	if root == nil {
 		return 0
