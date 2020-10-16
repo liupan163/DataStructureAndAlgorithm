@@ -6,12 +6,28 @@ import (
 	"strings"
 )
 
+type TreeNode struct {
+	Val   int
+	Left  *TreeNode
+	Right *TreeNode
+}
+
 func main() {
 	//println("result bool is ======>", isAnagram("anagram", "nagaram"))
 	//println("result string is ======>", removeDuplicates("bbaacaab"))
 	//println("result string is ======>", groupAnagrams([]string{"eat", "tea", "tan", "ate", "nat", "bat"}))
 	//println("myPow string is ======>", myPow(0.00001, 2147483647))
-	println("calculateMinimumHP string is ======>", calculateMinimumHP([][]int{{-2, -3, 3}, {-5, -10, 1}, {10, 30, -5}}))
+	//println("calculateMinimumHP string is ======>", calculateMinimumHP([][]int{{-2, -3, 3}, {-5, -10, 1}, {10, 30, -5}}))
+	a := &TreeNode{Val: 27, Left: nil, Right: nil}
+	b := &TreeNode{Val: 34, Left: nil, Right: nil}
+	c := &TreeNode{Val: 58, Left: nil, Right: nil}
+	d := &TreeNode{Val: 50, Left: nil, Right: nil}
+	e := &TreeNode{Val: 44, Left: nil, Right: nil}
+	a.Right = b
+	b.Right = c
+	c.Left = d
+	d.Left = e
+	println("calculateMinimumHP string is ======>", minDiffInBST(a))
 }
 
 var resultValue []int
@@ -86,34 +102,44 @@ func doIterate(dungeon [][]int, minInitialValue float64, accumulateValue, x, y i
 	}
 }
 
-type TreeNode struct {
-	     Val int
-	     Left *TreeNode
-	     Right *TreeNode
-	 }
-var minValue = 0
-func minDepth(root *TreeNode) int {
-	var tempMinValue = 0
-	calculateDepth(tempMinValue,root)
+var minValue = 1<<32-1
+func minDiffInBST(root *TreeNode) int {
+	if root == nil {
+		return 0
+	}
+	if root.Left != nil {
+		var result = root.Val - root.Left.Val
+		minValue = compareMinValue(result, minValue)
+		minFunc(root.Left)
+	}
+	if root.Right != nil {
+		var result = root.Right.Val - root.Val
+		minValue = compareMinValue(result, minValue)
+		minFunc(root.Right)
+	}
 	return minValue
 }
-
-func calculateDepth(tempMinValue int, node *TreeNode){
-	if node == nil{
+func minFunc(node *TreeNode) {
+	if node == nil {
 		return
 	}
-	tempMinValue = tempMinValue + 1
-	if(node.Left==nil && node.Right==nil){
-		//min
-		minValue = int(math.Min(float64(minValue),float64(tempMinValue)))
-		return
-	}else{
-		calculateDepth(tempMinValue,node.Left)
-		calculateDepth(tempMinValue,node.Right)
+	if node.Left != nil {
+		var result = node.Val - node.Left.Val
+		minValue = compareMinValue(result, minValue)
+		minFunc(node.Left)
+	}
+	if node.Right != nil {
+		var result = node.Right.Val - node.Val
+		minValue = compareMinValue(result, minValue)
+		minFunc(node.Right)
 	}
 }
-
-
+func compareMinValue(a, b int) int {
+	if a > b {
+		return b
+	}
+	return a
+}
 
 func myPow(x float64, n int) float64 {
 	if n == 0 {
