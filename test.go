@@ -28,10 +28,22 @@ func main() {
 	b.Right = c
 	c.Left = d
 	d.Left = e
-	println("calculateMinimumHP string is ======>", minDiffInBST(a))
-	ba := &TreeNode{Val: 1, Left: nil, Right: nil}
-	println("binaryTreePaths string is ======>", strings.Join(binaryTreePaths(ba),""))
-	println("binaryTreePaths string is ======>", len(binaryTreePaths(ba)))
+	//println("calculateMinimumHP string is ======>", minDiffInBST(a))
+	//ba := &TreeNode{Val: 1, Left: nil, Right: nil}
+	//println("binaryTreePaths string is ======>", strings.Join(binaryTreePaths(ba), ""))
+	//println("binaryTreePaths string is ======>", len(binaryTreePaths(ba)))
+	//println("lengthOfLongestSubstring is ======>", lengthOfLongestSubstring("abcabcbb"))
+	println("topKFrequent is ======>", topKFrequent([]string{"i", "love", "leetcode", "i", "love", "coding"}, 2))
+	b10 := &TreeNode{Val: 10, Left: nil, Right: nil}
+	b5 := &TreeNode{Val: 5, Left: nil, Right: nil}
+	b15 := &TreeNode{Val: 15, Left: nil, Right: nil}
+	b6 := &TreeNode{Val: 6, Left: nil, Right: nil}
+	b20 := &TreeNode{Val: 20, Left: nil, Right: nil}
+	b10.Left = b5
+	b10.Right = b15
+	b15.Left = b6
+	b15.Right = b20
+	println("topKFrequent is ======>", isValidBST(b10))
 }
 
 var resultPaths = make([]string, 0)
@@ -41,7 +53,7 @@ func binaryTreePaths(root *TreeNode) []string {
 		return nil
 	}
 	var pathRecord = strconv.Itoa(root.Val)
-	if root.Left==nil && root.Right==nil{
+	if root.Left == nil && root.Right == nil {
 		resultPaths = append(resultPaths, pathRecord)
 	}
 	if root.Left != nil {
@@ -284,4 +296,123 @@ func isAnagram(s string, t string) bool {
 		return false
 	}
 	return true
+}
+
+func lengthOfLongestSubstring(s string) int {
+	if s == "" {
+		return 0
+	}
+	var sSlice = strings.Split(s, "")
+	var maxLength = 0
+	if len(sSlice) == 1 {
+		return 1
+	}
+	for index, value := range sSlice {
+		var recordMap = make(map[string]string, 0)
+		recordMap[value] = value
+		for i := index + 1; i < len(sSlice); i++ {
+			if _, ok := recordMap[sSlice[i]]; ok {
+				var tempMaxLength = i - index
+				maxLength = compareMaxValue(maxLength, tempMaxLength)
+				break
+			} else {
+				recordMap[sSlice[i]] = sSlice[i]
+				var tempMaxLength = i - index + 1
+				maxLength = compareMaxValue(maxLength, tempMaxLength)
+			}
+		}
+	}
+	return maxLength
+}
+func compareMaxValue(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+func topKFrequent(words []string, k int) []string {
+	var recordMap = make(map[string]int, 0)
+	var resultList = make([]string, 0)
+	for _, value := range words {
+		if _, ok := recordMap[value]; ok {
+			recordMap[value] = recordMap[value] + 1
+		} else {
+			recordMap[value] = 1
+		}
+	}
+	var reverseMap = make(map[int]string, 0)
+	var countList = make([]int, 0)
+	for index, value := range recordMap {
+		reverseMap[value] = index
+		countList = append(countList, value)
+	}
+	//sort.Reverse(sort.IntSlice(countList))
+	sort.Sort(sort.Reverse(sort.IntSlice(countList)))
+	for i := 0; i < k; i++ {
+		resultList = append(resultList, reverseMap[countList[i]])
+	}
+	return resultList
+}
+
+func isValidBST(root *TreeNode) bool {
+	var isTrue = false
+	if root == nil {
+		return true
+	}
+	isTrue = verifyLeftTree(root.Left, root.Val, root.Val) && verifyRightTree(root.Right, root.Val, root.Val)
+	return isTrue
+}
+
+func verifyLeftTree(root *TreeNode, upper, limitValue int) bool {
+	var isTrue = true
+	if root == nil {
+		return true
+	}
+	if root.Val > limitValue || root.Val > upper {
+		isTrue = false
+		return isTrue
+	}
+	if root.Left != nil && root.Val < root.Left.Val {
+		isTrue = false
+		return isTrue
+	}
+	if root.Right != nil && root.Val > root.Right.Val {
+		isTrue = false
+		return isTrue
+	}
+	if root.Left != nil {
+		isTrue = isTrue && verifyLeftTree(root.Left, root.Val, limitValue)
+	}
+	if root.Right != nil {
+		isTrue = isTrue && verifyRightTree(root.Right, root.Val, limitValue)
+	}
+	return isTrue
+}
+func verifyRightTree(root *TreeNode, upper, limitValue int) bool {
+	var isTrue = true
+	if root == nil {
+		return true
+	}
+	if root.Val < limitValue || root.Val < upper {
+		isTrue = false
+		return false
+	}
+	if root.Left != nil && root.Val < root.Left.Val {
+		isTrue = false
+		return isTrue
+	}
+	if root.Right != nil && root.Val > root.Right.Val {
+		isTrue = false
+		return isTrue
+	}
+	if root.Left != nil {
+		isTrue = isTrue && verifyLeftTree(root.Left, root.Val, limitValue)
+	}
+	if root.Right != nil {
+		isTrue = isTrue && verifyRightTree(root.Right, root.Val, limitValue)
+	}
+	isTrue = verifyLeftTree(root.Left, root.Val, limitValue)
+	isTrue = verifyRightTree(root.Right, root.Val, limitValue)
+	return isTrue
 }
