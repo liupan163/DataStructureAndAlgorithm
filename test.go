@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"math"
 	"sort"
 	"strconv"
@@ -38,12 +39,93 @@ func main() {
 	b5 := &TreeNode{Val: 5, Left: nil, Right: nil}
 	b15 := &TreeNode{Val: 15, Left: nil, Right: nil}
 	b6 := &TreeNode{Val: 6, Left: nil, Right: nil}
+	b3 := &TreeNode{Val: 3, Left: nil, Right: nil}
+	b7 := &TreeNode{Val: 7, Left: nil, Right: nil}
+	b13 := &TreeNode{Val: 13, Left: nil, Right: nil}
+	b18 := &TreeNode{Val: 18, Left: nil, Right: nil}
 	b20 := &TreeNode{Val: 20, Left: nil, Right: nil}
+	b1 := &TreeNode{Val: 1, Left: nil, Right: nil}
 	b10.Left = b5
 	b10.Right = b15
 	b15.Left = b6
 	b15.Right = b20
 	println("topKFrequent is ======>", isValidBST(b10))
+	b10.Left = b5
+	b10.Right = b15
+	b5.Left = b3
+	b5.Right = b7
+	b15.Left = b13
+	b15.Right = b18
+	b3.Left = b1
+	b7.Left = b6
+	println("rangeSumBST is ======>", rangeSumBST(b10, 6, 10))
+	println("containsNearbyAlmostDuplicate is ======>", containsNearbyAlmostDuplicate([]int{1, 5, 9, 1, 5, 9}, 2, 3))
+	println("countSmaller is ======>", countSmaller([]int{26, 78, 27, 100, 33, 67, 90, 23, 66, 5, 38, 7, 35, 23, 52, 22, 83, 51, 98, 69, 81, 32, 78, 28, 94, 13, 2, 97, 3, 76, 99, 51, 9, 21, 84, 66, 65, 36, 100, 41})[3])
+}
+
+func countSmaller(nums []int) []int {
+	var recordCountMap = make(map[int]int, 0)
+	var recordValueIndex = make(map[int]int, 0)
+
+	var resultList = make([]int, 0)
+	for index := len(nums) - 1; index >= 0; index-- {
+		var value = nums[index]
+		if recordCountMap[value] == 0 {
+			recordValueIndex[value] = index
+		}
+		recordCountMap[value] = recordCountMap[value] + 1
+		var tempCount = 0
+		for v, _ := range recordValueIndex {
+			if value > v {
+				var recordCount = recordCountMap[v]
+				tempCount = tempCount + recordCount
+			}
+		}
+		resultList = append(resultList, tempCount)
+		fmt.Printf("%v || %v\n",value,resultList)
+	}
+	sort.Reverse()
+	reverse(resultList)
+	fmt.Printf("%v",resultList)
+	return resultList
+}
+func reverse(s []int) []int {
+	for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
+		s[i], s[j] = s[j], s[i]
+	}
+	return s
+}
+func containsNearbyAlmostDuplicate(nums []int, k int, t int) bool {
+	var isExist = false
+	for i := 0; i < len(nums); i++ {
+		for j := i + 1; j <= i+k && j < len(nums); j++ {
+			if absValue(nums[j], nums[i]) <= t {
+				isExist = true
+			}
+		}
+	}
+	return isExist
+}
+
+func absValue(a, b int) int {
+	if a-b > 0 {
+		return a - b
+	}
+	return b - a
+}
+
+var resultInt = 0
+
+func rangeSumBST(root *TreeNode, L int, R int) int {
+	if root == nil {
+		return 0
+	}
+	if root.Val >= L && root.Val <= R {
+		resultInt = resultInt + root.Val
+	}
+	rangeSumBST(root.Left, L, R)
+	rangeSumBST(root.Right, L, R)
+	return resultInt
 }
 
 var resultPaths = make([]string, 0)
