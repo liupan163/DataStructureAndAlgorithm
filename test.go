@@ -66,8 +66,7 @@ func main() {
 func countSmaller(nums []int) []int {
 	var recordCountMap = make(map[int]int, 0)
 	var recordValueIndex = make(map[int]int, 0)
-
-	var resultList = make([]int, 0)
+	var resultList = make([]int, len(nums))
 	for index := len(nums) - 1; index >= 0; index-- {
 		var value = nums[index]
 		if recordCountMap[value] == 0 {
@@ -81,20 +80,13 @@ func countSmaller(nums []int) []int {
 				tempCount = tempCount + recordCount
 			}
 		}
-		resultList = append(resultList, tempCount)
+		resultList[index]= tempCount
 		fmt.Printf("%v || %v\n",value,resultList)
 	}
-	sort.Reverse()
-	reverse(resultList)
 	fmt.Printf("%v",resultList)
 	return resultList
 }
-func reverse(s []int) []int {
-	for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
-		s[i], s[j] = s[j], s[i]
-	}
-	return s
-}
+
 func containsNearbyAlmostDuplicate(nums []int, k int, t int) bool {
 	var isExist = false
 	for i := 0; i < len(nums); i++ {
