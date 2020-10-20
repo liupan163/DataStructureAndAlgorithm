@@ -61,18 +61,30 @@ func main() {
 	println("rangeSumBST is ======>", rangeSumBST(b10, 6, 10))
 	println("containsNearbyAlmostDuplicate is ======>", containsNearbyAlmostDuplicate([]int{1, 5, 9, 1, 5, 9}, 2, 3))
 	println("countSmaller is ======>", countSmaller([]int{26, 78, 27, 100, 33, 67, 90, 23, 66, 5, 38, 7, 35, 23, 52, 22, 83, 51, 98, 69, 81, 32, 78, 28, 94, 13, 2, 97, 3, 76, 99, 51, 9, 21, 84, 66, 65, 36, 100, 41})[3])
+	println("checkAroundPositions is ======>", checkAroundPositions([]int{26, 78, 27, 100, 33, 67, 90, 23, 66, 5, 38, 7, 35, 23, 52, 22, 83, 51, 98, 69, 81, 32, 78, 28, 94, 13, 2, 97, 3, 76, 99, 51, 9, 21, 84, 66, 65, 36, 100, 41})[3])
 }
 
 func numIslands(grid [][]byte) int {
-	for x:=0;x< len(grid[0]);x++{
-		for y:=0;y<len(grid);y++{
-			checkPosition(grid[x][y])
+	var resultIslandCount = 0
+	for x := 0; x < len(grid[0]); x++ {
+		for y := 0; y < len(grid); y++ {
+			if grid[y][x] == 1 {
+				resultIslandCount = resultIslandCount + 1
+				checkAroundPositions(grid, y, x)
+			}
 		}
 	}
+	return resultIslandCount
 }
 
-func checkPosition(position byte)  {
-
+func checkAroundPositions(grid [][]byte, y, x int) {
+	grid[y][x] = 0
+	if x+1 < len(grid[0]) && grid[y][x+1] == 1 {
+		checkAroundPositions(grid, y, x+1)
+	}
+	if y+1 < len(grid) && grid[y+1][x] == 1 {
+		checkAroundPositions(grid, y+1, x)
+	}
 }
 
 func countSmaller(nums []int) []int {
@@ -92,10 +104,10 @@ func countSmaller(nums []int) []int {
 				tempCount = tempCount + recordCount
 			}
 		}
-		resultList[index]= tempCount
-		fmt.Printf("%v || %v\n",value,resultList)
+		resultList[index] = tempCount
+		fmt.Printf("%v || %v\n", value, resultList)
 	}
-	fmt.Printf("%v",resultList)
+	fmt.Printf("%v", resultList)
 	return resultList
 }
 
