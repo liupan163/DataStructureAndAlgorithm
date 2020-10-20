@@ -63,6 +63,18 @@ func main() {
 	println("countSmaller is ======>", countSmaller([]int{26, 78, 27, 100, 33, 67, 90, 23, 66, 5, 38, 7, 35, 23, 52, 22, 83, 51, 98, 69, 81, 32, 78, 28, 94, 13, 2, 97, 3, 76, 99, 51, 9, 21, 84, 66, 65, 36, 100, 41})[3])
 }
 
+func numIslands(grid [][]byte) int {
+	for x:=0;x< len(grid[0]);x++{
+		for y:=0;y<len(grid);y++{
+			checkPosition(grid[x][y])
+		}
+	}
+}
+
+func checkPosition(position byte)  {
+
+}
+
 func countSmaller(nums []int) []int {
 	var recordCountMap = make(map[int]int, 0)
 	var recordValueIndex = make(map[int]int, 0)
