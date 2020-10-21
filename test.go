@@ -64,6 +64,60 @@ func main() {
 	println("checkAroundPositions is ======>", checkAroundPositions([]int{26, 78, 27, 100, 33, 67, 90, 23, 66, 5, 38, 7, 35, 23, 52, 22, 83, 51, 98, 69, 81, 32, 78, 28, 94, 13, 2, 97, 3, 76, 99, 51, 9, 21, 84, 66, 65, 36, 100, 41})[3])
 }
 
+type KthLargest struct {
+	capacity int
+	data     []int
+	len      int
+}
+
+func Constructor(k int, nums []int) KthLargest {
+	var kthLargest = KthLargest{}
+	kthLargest.capacity = k
+	kthLargest.data = make([]int, 0)
+	for _, num := range nums {
+		kthLargest.Add(num)
+	}
+	return kthLargest
+}
+
+func (kth *KthLargest) Add(val int) int {
+	if kth.len < kth.capacity {
+		kth.data = append(kth.data, val)
+		kth.len = kth.len + 1
+		return 0
+	} else if kth.len == kth.capacity {
+		kth.data = append(kth.data, val)
+		n := len(kth.data) - 1
+		for i := n / 2; i >= 1; i-- {
+			heapify(kth.data, i)
+		}
+	} else {
+		if val > kth.data[0] {
+			kth.data[0] = val
+			heapify(kth.data, 1)
+		}
+	}
+	return kth.data[1]
+}
+
+func heapify(data []int, index int) {
+	n := len(data) - 1
+	for {
+		minPos := index
+		if index*2 <= n && data[index*2] < data[minPos] {
+			minPos = index * 2
+		}
+		if index*2+1 <= n && data[index*2+1] < data[minPos] {
+			minPos = index*2 + 1
+		}
+		if minPos == index {
+			break
+		}
+		data[minPos], data[index] = data[index], data[minPos]
+		index = minPos
+	}
+}
+
 func numIslands(grid [][]byte) int {
 	var resultIslandCount = 0
 	for x := 0; x < len(grid[0]); x++ {
