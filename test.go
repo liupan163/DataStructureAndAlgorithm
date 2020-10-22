@@ -61,22 +61,68 @@ func main() {
 	println("rangeSumBST is ======>", rangeSumBST(b10, 6, 10))
 	println("containsNearbyAlmostDuplicate is ======>", containsNearbyAlmostDuplicate([]int{1, 5, 9, 1, 5, 9}, 2, 3))
 	println("countSmaller is ======>", countSmaller([]int{26, 78, 27, 100, 33, 67, 90, 23, 66, 5, 38, 7, 35, 23, 52, 22, 83, 51, 98, 69, 81, 32, 78, 28, 94, 13, 2, 97, 3, 76, 99, 51, 9, 21, 84, 66, 65, 36, 100, 41})[3])
-	println("checkAroundPositions is ======>", checkAroundPositions([]int{26, 78, 27, 100, 33, 67, 90, 23, 66, 5, 38, 7, 35, 23, 52, 22, 83, 51, 98, 69, 81, 32, 78, 28, 94, 13, 2, 97, 3, 76, 99, 51, 9, 21, 84, 66, 65, 36, 100, 41})[3])
+	println("findCircleNum is ======>", findCircleNum([][]int{{1, 0, 0, 1}, {0, 1, 1, 0}, {0, 1, 1, 1}, {1, 0, 1, 1}}))
 }
 
-func findCircleNum(M [][]int) int {
-	var result = 0
-	for x := 0; x < len(M); x++ {
-		for y := 0; y < len(M[0]); y++ {
-			if M[x][y] == 1 {
-				result = result + 1
-				checkFriend(M, x, y)
+func eventualSafeNodes(graph [][]int) []int {
+	var resultList = make([]int, 0)
+	var finalList = make([]int, 0)
+	for index := len(graph) - 1; index >= 0; index-- {
+		var tempValue = graph[index]
+		if tempValue == nil || len(tempValue) == 0 {
+			resultList = append(resultList, index)
+			finalList = append(finalList, index)
+		} else {
+			if len(tempValue) == 1 {
+				var value = tempValue[0]
+				for _, finalPort := range finalList {
+					if value == finalPort {
+						resultList = append(resultList, index)
+					}
+				}
 			}
 		}
 	}
-	return result
+	sort.Ints(resultList)
+	return resultList
 }
 
+func findCircleNum(M [][]int) int {
+	var resultList = make([][]int, 0)
+	for x := 0; x < len(M); x++ {
+		var rowList = make([]int, 0)
+		rowList = append(rowList, x)
+		for y := 0; y < len(M[0]); y++ {
+			if M[x][y] == 1 {
+				rowList = append(rowList, y)
+			}
+		}
+		resultList = append(resultList, rowList)
+	}
+test:
+	for {
+		var isFinishLoop = true
+	tempLoop:
+		for i := 0; i < len(resultList)-1; i++ {
+			list1 := resultList[i]
+			list2 := resultList[i+1]
+			for _, value1 := range list1 {
+				for _, value2 := range list2 {
+					if value1 == value2 {
+						resultList[i] = append(resultList[i], resultList[i+1]...)
+						resultList = append(resultList[:i+1], resultList[i+2:]...)
+						isFinishLoop = false
+						break tempLoop
+					}
+				}
+			}
+		}
+		if isFinishLoop {
+			break test
+		}
+	}
+	return len(resultList)
+}
 
 type KthLargest struct {
 	capacity int
