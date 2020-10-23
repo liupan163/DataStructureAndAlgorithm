@@ -64,6 +64,46 @@ func main() {
 	println("findCircleNum is ======>", findCircleNum([][]int{{1, 0, 0, 1}, {0, 1, 1, 0}, {0, 1, 1, 1}, {1, 0, 1, 1}}))
 }
 
+type Trie struct {
+	value map[string]*Trie
+	isEnd bool
+}
+
+func Constructor() Trie {
+	return Trie{}
+}
+
+/** Inserts a word into the trie. */
+func (trie *Trie) Insert(word string) {
+	var root = trie
+	for _, w := range word {
+		if v, ok := root.value[string(w)]; ok {
+			root = v
+		} else {
+			newTrie := make(map[string]*Trie, 1)
+			newTrie[string(w)] = nil
+			root.value[string(w)] = &Trie{
+				value: newTrie,
+				isEnd: false,
+			}
+		}
+	}
+	root.isEnd = true
+}
+
+func (trie *Trie) Search(word string) bool {
+	var node = trie
+	for _, w := range word {
+		if _, ok := node.value[string(w)]; ok {
+			node = node.value[string(w)]
+			continue
+		} else {
+			return false
+		}
+	}
+	return node.isEnd
+}
+
 func eventualSafeNodes(graph [][]int) []int {
 	var resultList = make([]int, 0)
 	var finalList = make([]int, 0)
@@ -130,15 +170,15 @@ type KthLargest struct {
 	len      int
 }
 
-func Constructor(k int, nums []int) KthLargest {
-	var kthLargest = KthLargest{}
-	kthLargest.capacity = k
-	kthLargest.data = make([]int, 0)
-	for _, num := range nums {
-		kthLargest.Add(num)
-	}
-	return kthLargest
-}
+//func Constructor(k int, nums []int) KthLargest {
+//	var kthLargest = KthLargest{}
+//	kthLargest.capacity = k
+//	kthLargest.data = make([]int, 0)
+//	for _, num := range nums {
+//		kthLargest.Add(num)
+//	}
+//	return kthLargest
+//}
 
 func (kth *KthLargest) Add(val int) int {
 	if kth.len < kth.capacity {
