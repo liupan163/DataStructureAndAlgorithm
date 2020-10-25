@@ -62,6 +62,48 @@ func main() {
 	println("containsNearbyAlmostDuplicate is ======>", containsNearbyAlmostDuplicate([]int{1, 5, 9, 1, 5, 9}, 2, 3))
 	println("countSmaller is ======>", countSmaller([]int{26, 78, 27, 100, 33, 67, 90, 23, 66, 5, 38, 7, 35, 23, 52, 22, 83, 51, 98, 69, 81, 32, 78, 28, 94, 13, 2, 97, 3, 76, 99, 51, 9, 21, 84, 66, 65, 36, 100, 41})[3])
 	println("findCircleNum is ======>", findCircleNum([][]int{{1, 0, 0, 1}, {0, 1, 1, 0}, {0, 1, 1, 1}, {1, 0, 1, 1}}))
+	println("letterCasePermutation is ======>", len(letterCasePermutation("a1b2")))
+}
+
+func letterCasePermutation(S string) []string {
+	var resultList = make([]string, 0)
+	for index, _ := range S {
+		if len(resultList) == 0 {
+			if S[index] >= 'a' && S[index] <= 'z' {
+				resultList = append(resultList, S[index])
+				resultList = append(resultList, exchangeChar(S[index], false))
+			} else if S[index] >= 'A' && S[index] <= 'Z' {
+				resultList = append(resultList, S[index])
+				resultList = append(resultList, exchangeChar(S[index], false))
+			} else {
+				resultList = append(resultList, S[index])
+			}
+			continue
+		}
+		var newResult = make([]byte, 0)
+		for _, item := range resultList {
+			if S[index] >= 'a' && S[index] <= 'z' {
+				newResult = append(item, S[index])
+				newResult = append(item, exchangeChar(S[index], false))
+			} else if S[index] >= 'A' && S[index] <= 'Z' {
+				newResult = append(newResult, S[index])
+				newResult = append(newResult, exchangeChar(S[index], false))
+			} else {
+				newResult = append(newResult, S[index])
+			}
+		}
+		resultList = newResult
+	}
+	return resultList
+}
+
+func exchangeChar(c byte, isUpper bool) byte {
+	if isUpper {
+		c = c + 32
+	} else {
+		c = c - 32
+	}
+	return c
 }
 
 type Trie struct {
